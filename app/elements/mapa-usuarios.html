@@ -1,0 +1,27 @@
+<!-- Imports polymer -->
+<link rel="import" href="../bower_components/polymer/polymer-mini.html">
+
+<!-- Defines element markup -->
+<dom-module id="mapa-usuarios">
+  <template>
+  <style>
+    :host{
+      display: block;
+    }
+  </style>
+  <firebase-collection
+    location="https://geolocalizar.firebaseio.com/marcas"
+    data="{{marcas}}"
+  ></firebase-collection>
+  <google-map id="mapa" latitude="0" longitude="0" fit-to-markers>
+    <template is="dom-repeat" items="{{marcas}}">
+      <google-map-marker latitude="{{item.latitude}}" longitude="{{item.longitude}}"></google-map-marker>
+    </template>
+  </google-map>
+  </template>
+  <script>
+  Polymer({
+    is: 'mapa-usuarios'
+  });
+  </script>
+</dom-module>

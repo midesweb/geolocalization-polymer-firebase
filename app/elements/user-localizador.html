@@ -1,0 +1,87 @@
+<!-- Imports polymer -->
+<link rel="import" href="../bower_components/polymer/polymer-mini.html">
+
+<!-- Defines element markup -->
+<dom-module id="user-localizador">
+  <template>
+    <style>
+      :host{
+        display: block;
+      }
+      paper-toolbar {
+        margin-bottom: 10px;
+        --paper-toolbar-background: #9C27B0;
+      }
+      paper-material{
+        padding: 5px 20px 5px 20px;
+        margin-bottom: 10px;
+      }
+      paper-button{
+        margin: 5px 0 5px 0;
+        background-color: #9C27B0;
+        color: #fff;
+        font-size: 0.9em;
+      }
+      .verde{
+        color: #4CAF50;
+      }
+      .rojo{
+        color: #FFCDD2;
+      }
+    </style>
+    <paper-toolbar>
+      <paper-icon-button icon="maps:my-location" on-tap="describeLocation" class$="{{classLocation(localizado)}}"></paper-icon-button>
+      <div class="title">Geolocalización Firebase + Polymer</div>
+    </paper-toolbar>
+  </template>
+  <script>
+  Polymer({
+    is: 'user-localizador',
+
+    properties: {
+      user: Object,
+      position: Object,
+      localizado: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    observers: [
+      'crearMarca(user, position)'
+    ],
+
+    attached: function() {
+      if (navigator.geolocation) {
+        var that = this;
+        navigator.geolocation.getCurrentPosition(function(position) {
+          that.position = position.coords;
+          that.localizado = true;
+          console.log('localizado!!');
+        }, function(){
+          app.crearDialogo('No se puede localizarte por algún motivo');
+        });
+      } else {
+        alert("Navegador no compatible con geolocalización")
+      }
+    },
+
+    crearMarca: function(user, pos){
+      var obj = {};
+      obj[user.uid] = {
+        latitude: pos.latitude,
+        longitude: pos.longitude
+      };
+      var ref = new Firebase("https://geolocalizar.firebaseio.com/marcas");
+      ref.update(obj, function(){
+        app.crearDialogo('Creada / actualizada la marca en tu posición');
+      });
+    },
+
+    classLocation: function(loc) {
+      console.log('local', loc);
+      return (loc)? 'verde' : 'rojo';
+    }
+  });
+  </script>
+</dom-module>
