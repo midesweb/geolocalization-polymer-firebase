@@ -15,7 +15,7 @@
   ></firebase-collection>
   <google-map id="mapa" latitude="0" longitude="0" fit-to-markers>
     <template is="dom-repeat" items="{{marcas}}">
-      <google-map-marker latitude="{{item.latitude}}" longitude="{{item.longitude}}"></google-map-marker>
+      <google-map-marker latitude="{{item.latitude}}" longitude="{{item.longitude}}" animation="DROP"></google-map-marker>
     </template>
   </google-map>
   </template>
