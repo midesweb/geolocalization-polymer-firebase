@@ -30,7 +30,7 @@
       }
     </style>
     <paper-toolbar>
-      <paper-icon-button icon="maps:my-location" on-tap="describeLocation" class$="{{classLocation(localizado)}}"></paper-icon-button>
+      <paper-icon-button icon="maps:my-location" class$="{{classLocation(localizado)}}"></paper-icon-button>
       <div class="title">Geolocalización Firebase + Polymer</div>
     </paper-toolbar>
   </template>
@@ -55,7 +55,10 @@
       if (navigator.geolocation) {
         var that = this;
         navigator.geolocation.getCurrentPosition(function(position) {
-          that.position = position.coords;
+          that.position = {
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          };
           that.localizado = true;
           console.log('localizado!!');
         }, function(){
@@ -67,18 +70,13 @@
     },
 
     crearMarca: function(user, pos){
-      var obj = {
-        latitude: pos.latitude,
-        longitude: pos.longitude
-      };
       var ref = new Firebase("https://geolocalizar.firebaseio.com/marcas/" + user.uid);
-      ref.set(obj, function(){
+      ref.set(pos, function(){
         app.crearDialogo('Creada / actualizada la marca en tu posición');
       });
     },
 
     classLocation: function(loc) {
-      console.log('local', loc);
       return (loc)? 'verde' : 'rojo';
     }
   });
